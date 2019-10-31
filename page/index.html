@@ -1,0 +1,380 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>标题</title>
+</head>
+<style>
+    .box {
+        width: 100vw;
+        height: 100vh;
+        /* background: url(http://demo.cssmoban.com/cssthemes6/bpus_11_SCREEN/img/macbook-juice.jpg); */
+    }
+
+    .box div {
+        border-radius: 50%;
+        position: fixed;
+        overflow: hidden;
+        box-shadow: 0 0 5px #364C66;
+        transition: all 1s;
+    }
+
+    .bar {
+        position: fixed;
+        top: 0;
+        left: 100px;
+        width: 100px;
+        height: 200px;
+        /* background: forestgreen; */
+        transform: translateY(-70%);
+        transition: all 1s;
+        cursor: pointer;
+    }
+
+    .bar:hover {
+        transform: translateY(0);
+    }
+
+    .bar .line {
+        width: 0;
+        height: 65px;
+        border-left: 1px solid black;
+        border-bottom: 0;
+        margin: 0 auto;
+    }
+
+    .bar .point {
+        width: 10px;
+        height: 10px;
+        border: 1px solid black;
+        border-radius: 50%;
+        margin: 0 auto;
+    }
+
+    .bar div {
+        text-align: center;
+        line-height: 40px;
+        border: 1px solid black;
+    }
+
+    .form {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        width: 25%;
+        display: none;
+    }
+
+    .offer {
+        width: 100px;
+        height: 50px;
+        border-radius: 50px;
+        float: right;
+    }
+
+    .show {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        box-shadow: 0 0 10px black;
+        margin: auto;
+        width: 50%;
+        height: 95%;
+        overflow: auto;
+        display: none;
+    }
+
+    .lev {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: none;
+        box-shadow: 0 0 5px #364C66;
+    }
+
+    .lev2 {
+        width: 200px;
+        height: 95px;
+        border-radius: 50px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: none;
+        box-shadow: 0 0 5px #364C66;
+        z-index: 99999;
+        text-align: center;
+        padding: 10px 50px;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+        text-overflow: ellipsis;
+    }
+
+    .point {
+        z-index: 9999;
+    }
+</style>
+
+<body>
+    <div class="box">
+    </div>
+    <div class="lev"></div>
+    <div class="lev2"></div>
+    <div class="bar">
+        <div class="showfix">DIV BIG</div>
+        <div class="showwang">DIV SMALL</div>
+        <div class="delete">DELETE</div>
+        <div class="line"></div>
+        <div class="point"></div>
+    </div>
+
+
+    <div class="wangEditor">
+        <div class="show">
+        </div>
+        <div class="form">
+            <div id="div3">
+            </div>
+            <button class="offer">提交</button>
+        </div>
+
+    </div>
+
+</body>
+<script src="../static/js/jquery.js"></script>
+<script src="../static/js/common.js"></script>
+<script src="../static/js/wangEditor.js"></script>
+
+<script>
+    //存储
+    function getdata() {
+        if (localStorage.data) {
+            return JSON.parse(localStorage.data)
+        }
+        else {
+            return [];
+        }
+    }
+
+    function setdata(data) {
+        localStorage.data = JSON.stringify(data);
+    }
+    //创建
+    function create() {
+        total = data.length
+        $(".box").html("")
+        for (let i = 0; i < total; i++) {
+            var item = `<div class="point"></div>`
+            $(".box").append(item)
+        }
+        for (let i = 0; i < total; i++) {
+            var maxWidth = $(document).width() - $(".box div").eq(i).width();
+            var maxHeight = $(document).height() - $(".box div").eq(i).height()
+            $(".box div").eq(i).css({ width: randomNum(10, 20), left: randomNum(0, maxWidth), top: randomNum(0, maxHeight), background: `rgb(${randomNum(100, 200)},${randomNum(100, 200)},${randomNum(100, 200)},0.5)` })
+            $(".box div").eq(i).css({ height: $(".box div").eq(i).width() })
+            pos.push({ l: $(".box div").eq(i).position().left, t: $(".box div").eq(i).position().top })
+        }
+    }
+
+    //模态框
+    function showModel(e, ind) {
+        let ox = e.clientX;
+        let oy = e.clientY;
+        var w = $(".box").width() - ox
+        var color = $(".box div").eq(ind).css("background")
+        $(".lev").css({ top: oy > 150 ? oy - 50 : oy + 20, left: w > 250 ? ox : ox - 30, background: color })
+        $(".lev2").css({ top: oy > 150 ? oy - 150 : oy + 60, left: w > 250 ? ox : ox - 200, background: color })
+        $(".lev2").text(data[ind].text)
+        $(".lev").show()
+        $(".lev2").show()
+    }
+    function closeModel() {
+        $(".lev").hide()
+        $(".lev2").hide()
+    }
+
+    //显示隐藏
+    function showfix() {
+        var flag = $(".show").css("display")
+        if (flag == "none") {
+            $(".show").show()
+        } else {
+            $(".show").hide()
+        }
+    }
+    function showwang() {
+        var flag = $(".form").css("display")
+        if (flag == "none") {
+            $(".form").show()
+        } else {
+            $(".form").hide()
+        }
+    }
+</script>
+<!-- 创建小圆点 -->
+<script>
+
+    var data = getdata();      //存放富文本内容
+    var pos = []        //存放小圆点样式
+    var total = 0
+    var nowId=""       //当前选中的小圆点
+    let speed = 1
+    create()
+    var move=setInterval(function () {
+        for (let i = 0; i < total; i++) {
+            var l = pos[i].l, t = pos[i].t
+            var maxWidth = $(document).width() - $(".box div").eq(i).width();
+            var maxHeight = $(document).height() - $(".box div").eq(i).height()
+            pos[i].l += speed
+
+            if (l >= maxWidth) {
+                pos[i].l = 0
+            }
+            $(".box div").eq(i).css({ left: l, top, t })
+        }
+    }, 100)
+    // 小圆点事件 
+
+    $("body").on("mouseover", function (e) {
+        if (e.target.className == "point") {
+            speed = 0
+            var ind = $(e.target).index()
+            showModel(e, ind)
+        }
+        else {
+            speed = 1
+            closeModel()
+        }
+    })
+    $("body").on("click", function (e) {
+        if (e.target.className == "point") {
+            var ind = $(e.target).index()
+            nowId = ind
+            editor.txt.html(data[ind].html)
+            $(".show").html(data[ind].html)
+            $(".show").show()
+        }
+
+    })
+</script>
+
+<!-- 富文本 -->
+<script>
+    var E = window.wangEditor
+    var editor = new E('#div3')
+    editor.customConfig.uploadImgShowBase64 = true
+    editor.customConfig.menus = [
+        'head',  // 标题
+        'bold',  // 粗体
+        'fontSize',  // 字号
+        // 'fontName',  // 字体
+        // 'italic',  // 斜体
+        // 'underline',  // 下划线
+        // 'strikeThrough',  // 删除线
+        'foreColor',  // 文字颜色
+        // 'backColor',  // 背景颜色
+        'link',  // 插入链接
+        // 'list',  // 列表
+        'justify',  // 对齐方式
+        // 'quote',  // 引用
+        'emoticon',  // 表情
+        'image',  // 插入图片
+        // 'table',  // 表格
+        // 'video',  // 插入视频
+        // 'code',  // 插入代码
+        'undo',  // 撤销
+        'redo'  // 重复
+    ]
+    editor.customConfig.onchange = function (html) {
+        // html 即变化之后的内容
+        $(".show").html(editor.txt.html())
+    }
+    editor.create()
+    //设置内容
+    //editor.txt.html('<p>用 JS 设置的内容</p>')
+    //获取内容
+    document.getElementById('div3').addEventListener('click', function () {
+        editor.change && editor.change()
+    }, false)
+
+    $(window).keydown(function () {
+        var i = randomNum(0, 19)
+        var w = randomNum(10, 20)
+        $(".box div").eq(i).width(30)
+        $(".box div").eq(i).height(30)
+        setTimeout(function () {
+            $(".box div").eq(i).width(w)
+            $(".box div").eq(i).height(w)
+        }, 1000)
+    });
+</script>
+
+<!-- 提交 -->
+<script>
+    $(".offer").on("click", function () {
+        data.push({ html: editor.txt.html(), text: editor.txt.text() })
+        setdata(data)
+        create()
+    })
+</script>
+
+<!-- 拖动 -->
+<script>
+    const bxmax = $(".box").width() - $(".form").width();
+    const bymax = $(".box").height() - $(".form").height();
+    $(".form").on("contextmenu", function (e) {
+        e.preventDefault()
+        let ox = e.offsetX;
+        let oy = e.offsetY;
+        document.onmousemove = function (e) {
+            let cx = e.clientX;
+            let cy = e.clientY;
+            let mx = cx - ox - $(".box").offset().left;
+            let my = cy - oy - $(".box").offset().top - 26;
+            if (mx >= bxmax) {
+                mx = bxmax;
+            }
+            if (my >= bymax) {
+                my = bymax;
+            }
+            if (mx <= 0) {
+                mx = 0;
+            }
+            if (my <= 0) {
+                my = 0
+            }
+            $(".form").css({ left: mx })
+            $(".form").css({ top: my })
+        };
+        document.onmouseup = function () {
+            document.onmousemove = null;
+        }
+    })
+</script>
+
+<!-- 显示隐藏 -->
+<script>
+    $(".showwang").on("click", showwang)
+    $(".showfix").on("click", showfix)
+    $(".delete").on("click", function () {
+        var flag = $(".show").css("display")
+        if (flag != "none"&&nowId!=="") {
+            data.splice(nowId, 1)
+
+            nowId=""
+            editor.txt.html('')
+            $(".show").html('')
+            setdata(data)
+            create()
+        }
+    })
+
+</script>
+
+
+</html>
