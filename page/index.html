@@ -2,7 +2,7 @@
 
 <head>
     <link rel="stylesheet" href="../static/css/common.css">
-    <title>标题</title>
+    <title> Don't Forget</title>
 </head>
 <style>
     .box {
@@ -311,11 +311,9 @@
         var i = randomNum(0, data.length)
         var len=data[i].text.length
         var w =area(len)
-        $(".box div").eq(i).css({width:0})
-        $(".box div").eq(i).css({height:0})
+        $(".box div").eq(i).css({width:50,height:50,borderRadius:0})
         setTimeout(function () {
-            $(".box div").eq(i).css({width:w})
-            $(".box div").eq(i).css({height:w})
+            $(".box div").eq(i).css({width:w,height:w,borderRadius:"50%"})
         }, 1000)
     });
 </script>
