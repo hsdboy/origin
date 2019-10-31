@@ -173,11 +173,13 @@
             $(".box").append(item)
         }
         for (let i = 0; i < total; i++) {
+            var len=data[i].text.length
             var maxWidth = $(document).width() - $(".box div").eq(i).width();
             var maxHeight = $(document).height() - $(".box div").eq(i).height()
-            $(".box div").eq(i).css({ width: randomNum(10, 20), left: randomNum(0, maxWidth), top: randomNum(0, maxHeight), background: `rgb(${randomNum(100, 200)},${randomNum(100, 200)},${randomNum(100, 200)},0.5)` })
+            $(".box div").eq(i).css({ width: area(len), left: randomNum(0, maxWidth), top: randomNum(0, maxHeight), background: `rgb(${randomNum(100, 200)},${randomNum(100, 200)},${randomNum(100, 200)},0.5)` })
             $(".box div").eq(i).css({ height: $(".box div").eq(i).width() })
             pos.push({ l: $(".box div").eq(i).position().left, t: $(".box div").eq(i).position().top })
+        
         }
     }
 
@@ -214,6 +216,9 @@
         } else {
             $(".form").hide()
         }
+    }
+    function area(len){
+        return len>60?60:len<10?10:len
     }
 </script>
 <!-- 创建小圆点 -->
@@ -303,13 +308,14 @@
     }, false)
 
     $(window).keydown(function () {
-        var i = randomNum(0, 19)
-        var w = randomNum(10, 20)
-        $(".box div").eq(i).width(30)
-        $(".box div").eq(i).height(30)
+        var i = randomNum(0, data.length)
+        var len=data[i].text.length
+        var w =area(len)
+        $(".box div").eq(i).css({width:0})
+        $(".box div").eq(i).css({height:0})
         setTimeout(function () {
-            $(".box div").eq(i).width(w)
-            $(".box div").eq(i).height(w)
+            $(".box div").eq(i).css({width:w})
+            $(".box div").eq(i).css({height:w})
         }, 1000)
     });
 </script>
